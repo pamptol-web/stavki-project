@@ -3,11 +3,10 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>НЕ ПРОЕБИ БАБЛО | SPACE EDITION</title>
+    <title>EMBER ARC 120 | НЕ ПРОЕБИ БАБЛО</title>
     <style>
         :root {
             --neon-green: #39ff14;
-            --neon-blue: #00f2ff;
             --danger-red: #ff0000;
             --bg-black: #050505;
             --card-gray: #121212;
@@ -29,6 +28,7 @@
             margin: 0;
             padding: 10px;
             text-transform: uppercase;
+            overflow-x: hidden;
         }
 
         .payment-card {
@@ -39,9 +39,9 @@
             text-align: center;
             border: 4px solid var(--neon-green);
             box-shadow: 0 0 100px rgba(57, 255, 20, 0.15);
+            position: relative;
         }
 
-        /* СТИЛЬ ЗАГОЛОВКА С КОСЫМ ЗАЧЕРКИВАНИЕМ */
         .logo {
             font-size: clamp(1.4rem, 6vw, 2.8rem);
             line-height: 1.1;
@@ -54,33 +54,34 @@
         .strike-diagonal {
             position: relative;
             display: inline-block;
-            color: rgba(255, 255, 255, 0.6); /* Чуть приглушаем "НЕ" */
+            color: rgba(255, 255, 255, 0.8);
         }
 
         .strike-diagonal::before {
             content: "";
             position: absolute;
-            left: -5%;
+            left: -10%;
             top: 45%;
-            width: 110%;
-            height: 4px;
+            width: 120%;
+            height: 6px;
             background-color: var(--danger-red);
-            transform: rotate(-15deg); /* Косая черта */
-            box-shadow: 0 0 10px var(--danger-red);
+            transform: rotate(-15deg);
+            box-shadow: 0 0 15px var(--danger-red);
             border-radius: 2px;
+            z-index: 1;
         }
 
         #dynamic-header {
             display: block;
             color: var(--neon-green);
             font-size: clamp(0.9rem, 3vw, 1.2rem);
-            margin-top: 10px;
+            margin-top: 15px;
             text-shadow: 0 0 10px var(--neon-green);
             min-height: 1.5em;
             letter-spacing: 1px;
+            font-family: 'Arial', sans-serif;
         }
 
-        /* БАРАБАНЫ */
         .slot-machine {
             background: #cc0000;
             border: 6px solid #fff;
@@ -111,13 +112,6 @@
             background: #fff;
         }
 
-        .reel:not(:last-child)::after {
-            content: '';
-            position: absolute;
-            right: 0; top: 10%; width: 1px; height: 80%;
-            background: rgba(0, 0, 0, 0.1);
-        }
-
         .slot {
             height: var(--slot-size);
             width: var(--slot-size);
@@ -127,7 +121,6 @@
             font-size: calc(var(--slot-size) * 0.65);
         }
 
-        /* АНИМАЦИИ */
         .spin-fast { animation: scroll 0.12s linear infinite; }
         .spin-medium { animation: scroll 0.22s linear infinite; }
         .spin-slow { animation: scroll 0.32s linear infinite; }
@@ -150,7 +143,7 @@
             box-shadow: 0 5px 20px rgba(255,0,0,0.4);
             margin-bottom: 20px;
         }
-
+        
         .amount-display {
             background: #000;
             border: 2px solid var(--neon-green);
@@ -158,7 +151,7 @@
             margin-bottom: 1.5rem;
         }
 
-        #amount-text { color: var(--neon-green); font-size: 4rem; }
+        #amount-text { color: var(--neon-green); font-size: 4rem; line-height: 1; }
 
         .pay-button {
             background: #333;
@@ -179,7 +172,7 @@
 </head>
 <body>
 
-<div id="player" style="display:none;"></div>
+<div id="music-container"></div>
 
 <div class="payment-card">
     <div class="logo">
@@ -206,8 +199,6 @@
     <button class="pay-button" id="payBtn" onclick="redirectToMono()">СНАЧАЛА КРУТИ</button>
 </div>
 
-<script src="https://www.youtube.com/iframe_api"></script>
-
 <script>
     const emojis = ['7️⃣', '💎', '🍉', '🍒', '🍋', '🍇', '🔥', '👑', '🍀', '💰'];
     const speeds = ['spin-fast', 'spin-medium', 'spin-slow', 'spin-v-slow'];
@@ -227,7 +218,6 @@
 
     let currentAmount = 0;
     let isSpinning = false;
-    let ytPlayer;
     let musicStarted = false;
 
     function initReels() {
@@ -242,27 +232,25 @@
         });
     }
 
-    function onYouTubeIframeAPIReady() {
-        ytPlayer = new YT.Player('player', { 
-            height: '0', width: '0', videoId: 'v5XpL1C1g9g',
-            playerVars: { 'autoplay': 0, 'loop': 1, 'playlist': 'v5XpL1C1g9g' }
-        });
+    function startMusic() {
+        if (musicStarted) return;
+        // Создаем iframe YouTube с автоплеем после клика
+        const container = document.getElementById('music-container');
+        container.innerHTML = `<iframe width="0" height="0" src="https://www.youtube.com/embed/IDsCtDRV2uM?autoplay=1&loop=1&playlist=IDsCtDRV2uM" frameborder="0" allow="autoplay"></iframe>`;
+        musicStarted = true;
     }
 
     function spin() {
         if (isSpinning) return;
-        isSpinning = true;
+        
+        // Пытаемся запустить музыку при клике
+        startMusic();
 
+        isSpinning = true;
         const header = document.getElementById('dynamic-header');
         const reels = document.querySelectorAll('.reel');
 
         header.innerText = variations[Math.floor(Math.random() * variations.length)];
-        
-        if (!musicStarted && ytPlayer?.playVideo) { 
-            ytPlayer.playVideo(); 
-            musicStarted = true; 
-        }
-
         currentAmount += 10;
         document.getElementById('amount-text').innerText = currentAmount;
 
