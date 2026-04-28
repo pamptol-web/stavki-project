@@ -5,10 +5,6 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     
     <title>СТАВКИ-ХУЯВКИ | ИДУЩИЙ К РЕКЕ</title>
-    <meta name="description" content="Я в своем познании настолько преисполнился...">
-    <meta property="og:title" content="ИДУЩИЙ К РЕКЕ">
-    <meta property="og:description" content="Поиск покоя, умиротворения и великого фрактального подобия.">
-
     <style>
         :root {
             --neon-green: #39ff14;
@@ -30,55 +26,67 @@
             align-items: center;
             min-height: 100vh;
             margin: 0;
-            padding: 20px;
+            padding: 15px;
             text-transform: uppercase;
-            overflow-x: hidden;
         }
 
         .payment-card {
             background: var(--card-gray);
-            padding: 2.5rem;
+            padding: 1.5rem;
             width: 100%;
-            max-width: 420px;
+            max-width: 480px;
             text-align: center;
             border: 3px solid var(--neon-green);
-            box-shadow: 0 0 40px rgba(57, 255, 20, 0.2);
-            position: relative;
-            z-index: 2;
+            box-shadow: 0 0 50px rgba(57, 255, 20, 0.2);
         }
 
         .logo {
-            font-size: 2.5rem;
+            font-size: 2.2rem;
             line-height: 0.9;
             margin-bottom: 15px;
             color: var(--neon-green);
             text-shadow: 0 0 15px var(--neon-green);
         }
 
+        .video-wrapper {
+            position: relative;
+            width: 100%;
+            padding-bottom: 56.25%;
+            height: 0;
+            margin-bottom: 1rem;
+            background: #000;
+            border: 1px solid #333;
+        }
+
+        .video-wrapper iframe {
+            position: absolute;
+            top: 0; left: 0;
+            width: 100%; height: 100%;
+        }
+
         .philosophy-text {
             font-family: 'Georgia', serif;
             text-transform: none;
-            font-size: 0.9rem;
-            line-height: 1.6;
+            font-size: 0.85rem;
+            line-height: 1.5;
             color: #aaa;
-            margin-bottom: 2rem;
+            margin-bottom: 1.2rem;
             font-style: italic;
-            text-align: justify;
+            text-align: left;
             border-left: 2px solid var(--neon-green);
-            padding-left: 15px;
+            padding-left: 12px;
         }
 
         input {
             width: 100%;
-            padding: 20px;
+            padding: 18px;
             background: #000;
             border: 2px solid var(--neon-green);
             color: var(--neon-green);
             font-size: 2rem;
             text-align: center;
-            margin-bottom: 1.5rem;
+            margin-bottom: 1rem;
             outline: none;
-            display: block;
         }
 
         .pay-button {
@@ -99,43 +107,40 @@
         }
 
         .footer-note {
-            margin-top: 2rem;
-            font-size: 0.7rem;
+            margin-top: 1.5rem;
+            font-size: 0.65rem;
             color: #555;
-            letter-spacing: 2px;
-        }
-
-        .ambient-bg {
-            position: fixed;
-            top: 0; left: 0; width: 100%; height: 100%;
-            background: radial-gradient(circle at center, #111 0%, #000 100%);
-            z-index: 1;
+            letter-spacing: 1px;
         }
     </style>
 </head>
 <body>
 
-<div class="ambient-bg"></div>
-
 <div class="payment-card">
     <div class="logo">СТАВКИ<br>ХУЯВКИ</div>
     
-    <div class="philosophy-text">
-        Я в своем познании настолько преисполнился что мне этот мир абсолютно понятен, и я здесь 
-        ищу только одного - покоя, умиротворения и вот этой гармонии, от слияния с 
-        бесконечно вечным, от созерцания великого фрактального подобия и от вот этого 
-        замечательного всеединства существа, бесконечно вечного...
+    <div class="video-wrapper">
+        <iframe 
+            src="https://www.youtube-nocookie.com/embed/bRAsmvQ7Y_o?rel=0" 
+            title="Идущий к Реке (Hans Zimmer and Space)" 
+            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" 
+            allowfullscreen>
+        </iframe>
     </div>
     
-    <input type="number" id="amount" placeholder="СУММА (UAH)" inputmode="decimal" min="10">
+    <div class="philosophy-text">
+        Я в своем познании настолько преисполнился что мне этот мир абсолютно понятен, и я здесь ищу только одного...
+    </div>
+    
+    <input type="number" id="amount" placeholder="СУММА (UAH)" inputmode="decimal">
 
     <button class="pay-button" onclick="redirectToMono()">
-        СЛИТЬСЯ С БЕСКОНЕЧНОСТЬЮ
+        ЗАРЯДИТЬ В ВЕЧНОСТЬ
     </button>
 
     <div class="footer-note">
-        ПРОЕКТ: ИДУЩИЙ К РЕКЕ<br>
-        ГАРМОНИЯ И ВСЕЕДИНСТВО
+        ИДУЩИЙ К РЕКЕ<br>
+        ГАРМОНИЯ И УМИРОТВОРЕНИЕ
     </div>
 </div>
 
