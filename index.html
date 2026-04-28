@@ -3,19 +3,19 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>SPACE EDITION | КАРМИЧЕСКОЕ ОБНУЛЕНИЕ</title>
+    <title>НЕ ПРОЕБИ БАБЛО | SPACE EDITION</title>
     <style>
         :root {
             --neon-green: #39ff14;
+            --neon-blue: #00f2ff;
             --danger-red: #ff0000;
             --dark-red: #cc0000;
             --bg-black: #050505;
             --card-gray: #121212;
-            /* Высота строго одного символа */
             --slot-size: clamp(70px, 18vw, 110px); 
         }
 
-        * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+        * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; margin: 0; padding: 0; }
 
         body {
             font-family: 'Impact', 'Arial Black', sans-serif;
@@ -26,200 +26,170 @@
             display: flex;
             justify-content: center;
             align-items: center;
-            min-height: 100vh;
-            margin: 0;
-            padding: 10px;
+            min-height: 100dvh; 
+            width: 100%;
             text-transform: uppercase;
             overflow: hidden;
+            padding: 15px;
         }
 
         .payment-card {
             background: var(--card-gray);
-            padding: 2.5rem 1rem;
+            padding: 1.5rem 1rem;
             width: 100%;
-            max-width: 600px;
+            max-width: 500px;
             text-align: center;
             border: 4px solid var(--neon-green);
             box-shadow: 0 0 100px rgba(57, 255, 20, 0.15);
             position: relative;
         }
 
-        .logo {
-            font-size: clamp(1.4rem, 6vw, 2.8rem);
-            line-height: 1.1;
-            margin-bottom: 20px;
-            letter-spacing: 2px;
-        }
-
-        .strike-diagonal {
-            position: relative;
-            display: inline-block;
-        }
-
+        .logo { font-size: clamp(1.4rem, 7vw, 2.3rem); margin-bottom: 10px; }
+        .strike-diagonal { position: relative; display: inline-block; }
         .strike-diagonal::before {
-            content: "";
-            position: absolute;
-            left: -10%; top: 45%; width: 120%; height: 6px;
-            background-color: var(--danger-red);
-            transform: rotate(-15deg);
-            box-shadow: 0 0 15px var(--danger-red);
-            z-index: 1;
+            content: ""; position: absolute; left: -10%; top: 45%; width: 120%; height: 4px;
+            background-color: var(--danger-red); transform: rotate(-15deg); box-shadow: 0 0 15px var(--danger-red);
         }
 
-        #dynamic-header {
-            display: block;
-            color: var(--neon-green);
-            font-size: clamp(0.8rem, 3vw, 1.1rem);
-            margin-top: 15px;
-            min-height: 1.5em;
-            font-family: 'Arial', sans-serif;
-        }
+        #dynamic-header { color: var(--neon-green); font-size: 0.85rem; min-height: 1.5em; margin-bottom: 10px; font-family: Arial; }
 
-        /* МАШИНА С ВИДИМОСТЬЮ ОДНОЙ СТРОКИ */
         .slot-machine {
             background: var(--dark-red);
-            border: 6px solid #fff;
-            margin-bottom: 2rem;
-            border-radius: 15px;
+            border: 4px solid #fff;
+            margin: 1rem 0;
+            border-radius: 12px;
             display: flex;
-            justify-content: center;
-            box-shadow: 0 15px 40px rgba(0,0,0,0.6);
-            overflow: hidden; 
-            padding: 8px;
-            position: relative;
+            padding: 6px;
+            overflow: hidden;
         }
 
         .reel-container {
             display: flex;
-            justify-content: center;
-            align-items: center;
-            height: var(--slot-size); /* Высота только под один слот */
-            width: 100%;
-            background: #fff;
-            border-radius: 6px;
-            overflow: hidden;
-            position: relative;
-        }
-
-        .reel {
-            display: flex;
-            flex-direction: column;
-            width: 100%;
-            position: relative;
-            background: #fff;
-            transform: translateY(0);
-        }
-
-        /* КРАСНЫЕ РАЗДЕЛИТЕЛИ */
-        .reel:not(:last-child) {
-            border-right: 3px solid var(--dark-red);
-        }
-
-        .slot {
             height: var(--slot-size);
             width: 100%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: calc(var(--slot-size) * 0.7);
-            flex-shrink: 0;
+            background: #fff;
+            border-radius: 4px;
+            overflow: hidden;
         }
 
-        /* АНИМАЦИИ ВРАЩЕНИЯ */
+        .reel { display: flex; flex-direction: column; width: 100%; position: relative; background: #fff; }
+        .reel:not(:last-child) { border-right: 2px solid var(--dark-red); }
+        .slot { height: var(--slot-size); display: flex; align-items: center; justify-content: center; font-size: calc(var(--slot-size) * 0.7); flex-shrink: 0; }
+
         .spin-fast { animation: scroll 0.1s linear infinite; }
         .spin-medium { animation: scroll 0.15s linear infinite; }
         .spin-slow { animation: scroll 0.2s linear infinite; }
         .spin-v-slow { animation: scroll 0.25s linear infinite; }
+        @keyframes scroll { 0% { transform: translateY(0); } 100% { transform: translateY(calc(var(--slot-size) * -10)); } }
+        .stop-at-center { animation: none !important; transform: translateY(0) !important; }
 
-        @keyframes scroll {
-            0% { transform: translateY(0); }
-            100% { transform: translateY(calc(var(--slot-size) * -10)); }
+        .bet-selector { display: grid; grid-template-columns: repeat(4, 1fr); gap: 5px; margin-bottom: 15px; }
+        .bet-btn { background: #222; border: 2px solid #444; color: #888; padding: 10px 5px; font-family: 'Impact'; cursor: pointer; transition: 0.2s; font-size: 1rem; }
+        .bet-btn.active { border-color: var(--neon-green); color: var(--neon-green); background: #111; box-shadow: inset 0 0 10px rgba(57, 255, 20, 0.2); }
+
+        .amount-display { background: #000; border: 2px solid var(--neon-green); padding: 10px; margin-bottom: 1rem; position: relative; overflow: hidden; }
+        #amount-text { color: var(--neon-green); font-size: 3rem; line-height: 1; position: relative; z-index: 2; }
+        
+        .progress-fill {
+            position: absolute;
+            left: 0; top: 0; bottom: 0;
+            width: 0%;
+            background: rgba(57, 255, 20, 0.35);
+            transition: width 0.1s linear;
+            z-index: 1;
         }
 
-        .stop-at-center {
-            animation: none !important;
-            transform: translateY(0) !important;
-            transition: transform 0.1s ease-out;
+        input#deposit { width: 90%; background: #222; border: 1px solid #444; color: #fff; padding: 12px; font-family: 'Impact'; text-align: center; margin-bottom: 15px; font-size: 1.2rem; outline: none; }
+
+        .btn { padding: 18px; font-size: 1.4rem; width: 100%; font-family: 'Impact'; border: none; cursor: pointer; text-transform: uppercase; position: relative; overflow: hidden; }
+        .spin-btn { background: var(--danger-red); color: #fff; transition: all 0.2s ease; }
+        .spin-btn:disabled { background: #333; color: #555; cursor: not-allowed; }
+
+        @keyframes rave {
+            0% { background: var(--neon-green); color: #000; box-shadow: 0 0 30px var(--neon-green); }
+            33% { background: var(--neon-blue); color: #000; box-shadow: 0 0 30px var(--neon-blue); }
+            66% { background: var(--danger-red); color: #fff; box-shadow: 0 0 30px var(--danger-red); }
+            100% { background: var(--neon-green); color: #000; box-shadow: 0 0 30px var(--neon-green); }
         }
 
-        .spin-button {
-            background: var(--danger-red);
-            color: #fff;
-            border: 3px solid #fff;
-            padding: 20px;
-            cursor: pointer;
-            font-size: 1.6rem;
-            width: 100%;
-            font-family: 'Impact';
-            margin-bottom: 20px;
+        .pay-btn-rave { 
+            animation: rave 0.6s linear infinite !important; 
+            color: #000 !important; 
+            font-weight: 500 !important; 
+            font-size: clamp(1rem, 4.5vw, 1.4rem) !important;
+            text-shadow: 1px 1px 0px rgba(255,255,255,0.3);
+            border: 3px solid #fff !important;
         }
-
-        .amount-display {
-            background: #000;
-            border: 2px solid var(--neon-green);
-            padding: 15px;
-            margin-bottom: 1.5rem;
-        }
-
-        #amount-text { color: var(--neon-green); font-size: 4rem; line-height: 1; }
-
-        .pay-button {
-            background: #333;
-            padding: 22px;
-            font-size: 1.6rem;
-            width: 100%;
-            font-family: 'Impact';
-            color: #000;
-            border: none;
-        }
-
-        .pay-button.active {
-            background: var(--neon-green);
-            cursor: pointer;
-            box-shadow: 0 0 50px var(--neon-green);
-        }
+        
+        .hidden { display: none; }
     </style>
 </head>
 <body>
 
-<audio id="bgMusic" loop preload="auto">
-    <source src="./space.mp3" type="audio/mpeg">
-</audio>
+<audio id="bgMusic" loop preload="auto"><source src="./space.mp3" type="audio/mpeg"></audio>
+<audio id="winSound" preload="auto"><source src="./win.mp3" type="audio/mpeg"></audio>
 
 <div class="payment-card">
-    <div class="logo">
-        <span class="strike-diagonal">НЕ</span> ПРОЕБИ БАБЛО
-        <span id="dynamic-header">АТТРАКЦИОН ЩЕДРОСТИ</span>
+    <div class="logo"><span class="strike-diagonal">НЕ</span> ПРОЕБИ БАБЛО</div>
+    <div id="dynamic-header">ВНЕСИ ДЕПОЗИТ ДЛЯ ОЧИЩЕНИЯ</div>
+
+    <div id="setup-step">
+        <input type="number" id="deposit" placeholder="СУММА ДОНАТА (UAH)" min="5" step="5">
+        <button class="btn spin-btn" onclick="startSession()">ПОДТВЕРДИТЬ И НАЧАТЬ</button>
     </div>
 
-    <div class="slot-machine">
-        <div class="reel-container">
-            <div class="reel" id="reel1"></div>
-            <div class="reel" id="reel2"></div>
-            <div class="reel" id="reel3"></div>
-            <div class="reel" id="reel4"></div>
+    <div id="game-step" class="hidden">
+        <div class="slot-machine">
+            <div class="reel-container">
+                <div class="reel" id="reel1"></div>
+                <div class="reel" id="reel2"></div>
+                <div class="reel" id="reel3"></div>
+                <div class="reel" id="reel4"></div>
+            </div>
+        </div>
+
+        <div style="font-size: 0.7rem; color: #777; margin-bottom: 5px;">СТАВКА (UAH):</div>
+        <div class="bet-selector">
+            <button class="bet-btn" onclick="setBet(5)">5</button>
+            <button class="bet-btn active" onclick="setBet(10)">10</button>
+            <button class="bet-btn" onclick="setBet(20)">20</button>
+            <button class="bet-btn" onclick="setBet(50)">50</button>
+        </div>
+
+        <button class="btn spin-btn" id="spinBtn" onclick="spin()">КРУТАНУТЬ</button>
+        
+        <div class="amount-display">
+            <div class="progress-fill" id="pFill"></div>
+            <span id="amount-text">0</span>
+            <div style="font-size: 0.7rem; color: #555; position: relative; z-index: 2;">ОСТАТОК КАРМЫ (UAH)</div>
         </div>
     </div>
-
-    <button class="spin-button" id="spinBtn" onclick="spin()">КРУТАНУТЬ (+10 UAH)</button>
-    
-    <div class="amount-display">
-        <span id="amount-text">0</span>
-        <div style="font-size: 0.8rem; color: #555;">СУММА К ОБНУЛЕНИЮ (UAH)</div>
-    </div>
-
-    <button class="pay-button" id="payBtn" onclick="redirectToMono()">СНАЧАЛА КРУТИ</button>
 </div>
 
 <script>
     const emojis = ['7️⃣', '💎', '🍉', '🍒', '🍋', '🍇', '🔥', '👑', '🍀', '💰'];
     const speedClasses = ['spin-fast', 'spin-medium', 'spin-slow', 'spin-v-slow'];
-    const variations = ["ОБНУЛЕНИЕ КАРМЫ", "СЖИГАТЕЛЬ СУЕТЫ", "УТИЛИЗАЦИЯ БАБЛА", "ИНВЕСТИЦИЯ В ПУСТОТУ", "ДОНАТ В БЕСКОНЕЧНОСТЬ", "РИТУАЛЬНЫЙ СЛИВ", "ОТКУП ОТ ЭГО", "ПОЖЕРТВОВАНИЕ ХАОСУ", "ФИНАНСОВАЯ НИРВАНА", "ОЧИЩЕНИЕ КОШЕЛЬКА"];
+    const variations = [
+        "АТТРАКЦИОН ЩЕДРОСТИ", "ОБНУЛЕНИЕ КАРМЫ", "СЖИГАТЕЛЬ СУЕТЫ", "УТИЛИЗАЦИЯ БАБЛА", "ИНВЕСТИЦИЯ В ПУСТОТУ",
+        "ДОНАТ В БЕСКОНЕЧНОСТЬ", "АТТРАКЦИОН СМИРЕНИЯ", "БЕЗВОЗВРАТНЫЙ ПОТОК", "РИТУАЛЬНЫЙ СЛИВ", "ТВОЙ ВКЛАД В НИКУДА",
+        "ОТКУП ОТ ЭГО", "ПОЖЕРТВОВАНИЕ ХАОСУ", "СМЕРТЬ ТВОИХ ДЕНЕГ", "ЭНТРОПИЯ ГРИВНЫ", "ФИНАНСОВАЯ НИРВАНА",
+        "ОЧИЩЕНИЕ КОШЕЛЬКА", "ПРОТОКОЛ ЩЕДРОСТИ", "БЕЗУСЛОВНЫЙ ПЛАТЕЖ", "ЭКСПЕРИМЕНТ ПОЗНАНИЯ", "ГОРЕНИЕ СРЕДСТВ",
+        "ТРАНЗАКЦИЯ В ЭФИР", "БЕЗДОННАЯ БАНКА", "ГЕОМЕТРИЯ ПРОИГРЫША", "КОРМЛЕНИЕ СИНГУЛЯРНОСТИ", "ПОТОК СМИРЕНИЯ",
+        "ДЕМОНТАЖ БОГАТСТВА", "ЦИФРОВОЙ ЖЕРТВЕННИК", "КРУГОВОРОТ ТЩЕТЫ", "ФИЛАНТРОПИЯ БЕЗУМИЯ", "МЕХАНИКА ОБНУЛЕНИЯ",
+        "ПРЫЖОК В БЕЗДНУ", "КУРС НА ЗЕРО", "ВАЛЮТНЫЙ ПЕРФОРМАНС", "МАГИЯ ТРАНЗАКЦИЙ", "ФИНАНСОВЫЙ ЭКЗОРЦИЗМ",
+        "ПРОЩАНИЕ С КЭШЕМ", "ИСКУССТВО ТРАТИТЬ", "ПИР ВО ВРЕМЯ ЦИФРЫ", "ДЕНЬГИ НА ВЕТЕР (БУКВАЛЬНО)", "ГЕНЕРАТОР УБЫТКОВ",
+        "БЕЗЛИМИТНОЕ НИЧТО", "АЛХИМИЯ МИНУСА", "ЭСТЕТИКА ПУСТЫХ КАРМАНОВ", "ВЕЛИКИЙ ПЕРЕНОС", "ПОРТАЛ В МОНОБАНК",
+        "ТВОЙ ЛИЧНЫЙ ДЕФОЛТ", "ПАРАДОКС ПРИБЫЛИ", "СКАЧОК В НЕИЗВЕСТНОСТЬ", "ТОРЖЕСТВО ЩЕДРОСТИ", "ФИНАЛЬНЫЙ АККОРД"
+    ];
 
-    let currentAmount = 0;
+    let initialDeposit = 0;
+    let balance = 0;
+    let currentBet = 10;
     let isSpinning = false;
     let musicStarted = false;
+    let finalizing = false;
     const audio = document.getElementById('bgMusic');
+    const winSound = document.getElementById('winSound');
 
     function fillReel(reelId) {
         const reel = document.getElementById(reelId);
@@ -232,22 +202,78 @@
         }
     }
 
+    function setBet(amount) {
+        if (isSpinning || finalizing) return;
+        currentBet = amount;
+        document.querySelectorAll('.bet-btn').forEach(btn => {
+            btn.classList.toggle('active', parseInt(btn.innerText) === amount);
+        });
+        updateSpinButton();
+    }
+
+    function updateSpinButton() {
+        const btn = document.getElementById('spinBtn');
+        if (balance < 5) {
+             btn.innerText = "КАРМА ОЧИЩЕНА";
+             btn.className = "btn spin-btn pay-btn-rave";
+             btn.disabled = false;
+             return;
+        }
+
+        if (balance < currentBet) {
+            btn.innerText = "МАЛО БАБЛА";
+            btn.disabled = true;
+        } else {
+            btn.innerText = `КРУТАНУТЬ (-${currentBet})`;
+            btn.disabled = false;
+        }
+    }
+
+    function startSession() {
+        const input = document.getElementById('deposit');
+        const val = parseInt(input.value);
+        if (isNaN(val) || val < 5) {
+            alert("МИНИМУМ 5 UAH");
+            return;
+        }
+
+        if (!musicStarted) { 
+            audio.volume = 0.5; 
+            audio.play().catch(() => {}); 
+            musicStarted = true; 
+        }
+
+        initialDeposit = val;
+        balance = val;
+        document.getElementById('amount-text').innerText = balance;
+        document.getElementById('setup-step').classList.add('hidden');
+        document.getElementById('game-step').classList.remove('hidden');
+        updateSpinButton();
+        document.querySelectorAll('.reel').forEach(reel => fillReel(reel.id));
+    }
+
     function spin() {
-        if (isSpinning) return;
-        if (!musicStarted) { audio.play().catch(() => {}); musicStarted = true; }
+        if (finalizing) return;
+        
+        if (balance < 5) {
+            startFinalProgress();
+            return;
+        }
 
+        if (isSpinning || balance < currentBet) return;
+        
         isSpinning = true;
-        const reels = document.querySelectorAll('.reel');
+        balance -= currentBet;
+        document.getElementById('amount-text').innerText = balance;
         document.getElementById('dynamic-header').innerText = variations[Math.floor(Math.random() * variations.length)];
-        currentAmount += 10;
-        document.getElementById('amount-text').innerText = currentAmount;
+        updateSpinButton();
 
+        const reels = document.querySelectorAll('.reel');
         reels.forEach((reel, i) => {
             reel.classList.remove('stop-at-center');
             fillReel(reel.id);
             reel.classList.add(speedClasses[i]);
             
-            const stopDelay = 1000 + (i * 600); 
             setTimeout(() => {
                 reel.classList.add('stop-at-center');
                 reel.classList.remove(speedClasses[i]);
@@ -255,19 +281,57 @@
                 
                 if (i === reels.length - 1) {
                     isSpinning = false;
-                    const payBtn = document.getElementById('payBtn');
-                    payBtn.classList.add('active');
-                    payBtn.innerText = "ОЧИСТИТЬ КАРМУ";
+                    updateSpinButton();
+                    if (balance < 5) {
+                        document.getElementById('dynamic-header').innerText = "ОБНУЛЕНИЕ ЗАВЕРШЕНО";
+                    }
                 }
-            }, stopDelay);
+            }, 1000 + (i * 600));
         });
     }
 
-    document.querySelectorAll('.reel').forEach(reel => fillReel(reel.id));
-    function redirectToMono() {
-        if (!isSpinning && currentAmount > 0) {
-            window.location.href = `https://send.monobank.ua/jar/66g9U4uZMY?a=${currentAmount}`;
+    function startFinalProgress() {
+        if (finalizing) return;
+        finalizing = true;
+        
+        const btn = document.getElementById('spinBtn');
+        const textDisplay = document.getElementById('amount-text');
+        const pFill = document.getElementById('pFill');
+        
+        // МАКСИМАЛЬНАЯ ГРОМКОСТЬ ПОБЕДЫ И ПРИГЛУШЕНИЕ ФОНА
+        audio.volume = 0.05; 
+        winSound.currentTime = 0; // Сброс в начало
+        winSound.volume = 1.0;    // Максимум
+        winSound.play().catch((e) => console.log("Sound play error:", e));
+        
+        btn.disabled = true;
+        btn.innerText = "ПОДГОТОВКА ПЕРЕВОДА...";
+        
+        const duration = 3000; 
+        const startTime = Date.now();
+
+        function update() {
+            const now = Date.now();
+            const elapsed = now - startTime;
+            const progress = Math.min(elapsed / duration, 1);
+            
+            const currentShow = Math.floor(progress * initialDeposit);
+            textDisplay.innerText = currentShow;
+            pFill.style.width = (progress * 100) + "%";
+
+            if (progress < 1) {
+                requestAnimationFrame(update);
+            } else {
+                textDisplay.innerText = initialDeposit;
+                setTimeout(redirectToMono, 1000);
+            }
         }
+        
+        requestAnimationFrame(update);
+    }
+
+    function redirectToMono() {
+        window.location.href = `https://send.monobank.ua/jar/66g9U4uZMY?a=${initialDeposit}`;
     }
 </script>
 </body>
