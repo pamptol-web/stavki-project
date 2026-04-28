@@ -3,7 +3,16 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>НЕ ПРОЕБИ БАБЛО | SPACE EDITION</title>
+    
+    <meta property="og:title" content="ОЧИЩЕНИЕ КАРМЫ 100%">
+    <meta property="og:description" content="Space Edition: Ритуал финансового обнуления запущен. Крути слоты, очищай карму.">
+    <meta property="og:image" content="https://pamptol-web.github.io/stavki-project/preview.jpg">
+    <meta property="og:url" content="https://pamptol-web.github.io/stavki-project/">
+    <meta property="og:type" content="website">
+    <meta name="twitter:card" content="summary_large_image">
+
+    <title>ОЧИЩЕНИЕ КАРМЫ 100%</title>
+    
     <style>
         :root {
             --neon-green: #39ff14;
@@ -87,8 +96,8 @@
         .bet-btn { background: #222; border: 2px solid #444; color: #888; padding: 10px 5px; font-family: 'Impact'; cursor: pointer; transition: 0.2s; font-size: 1rem; }
         .bet-btn.active { border-color: var(--neon-green); color: var(--neon-green); background: #111; box-shadow: inset 0 0 10px rgba(57, 255, 20, 0.2); }
 
-        .amount-display { background: #000; border: 2px solid var(--neon-green); padding: 10px; margin-bottom: 1rem; position: relative; overflow: hidden; }
-        #amount-text { color: var(--neon-green); font-size: 3rem; line-height: 1; position: relative; z-index: 2; }
+        .amount-display { background: #000; border: 2px solid var(--neon-green); padding: 10px; margin-bottom: 1rem; position: relative; overflow: hidden; min-height: 80px; display: flex; flex-direction: column; justify-content: center; align-items: center; }
+        #amount-text { color: var(--neon-green); font-size: 3rem; line-height: 1; position: relative; z-index: 2; transition: all 0.3s ease; }
         
         .progress-fill {
             position: absolute;
@@ -161,7 +170,7 @@
         <div class="amount-display">
             <div class="progress-fill" id="pFill"></div>
             <span id="amount-text">0</span>
-            <div style="font-size: 0.7rem; color: #555; position: relative; z-index: 2;">ОСТАТОК КАРМЫ (UAH)</div>
+            <div id="amount-label" style="font-size: 0.7rem; color: #555; position: relative; z-index: 2;">ОСТАТОК КАРМЫ (UAH)</div>
         </div>
     </div>
 </div>
@@ -297,15 +306,16 @@
         const btn = document.getElementById('spinBtn');
         const textDisplay = document.getElementById('amount-text');
         const pFill = document.getElementById('pFill');
+        const label = document.getElementById('amount-label');
         
-        // МАКСИМАЛЬНАЯ ГРОМКОСТЬ ПОБЕДЫ И ПРИГЛУШЕНИЕ ФОНА
+        // Звук: громкая победа и тихий фон
         audio.volume = 0.05; 
-        winSound.currentTime = 0; // Сброс в начало
-        winSound.volume = 1.0;    // Максимум
-        winSound.play().catch((e) => console.log("Sound play error:", e));
+        winSound.currentTime = 0; 
+        winSound.volume = 1.0; 
+        winSound.play().catch(() => {});
         
         btn.disabled = true;
-        btn.innerText = "ПОДГОТОВКА ПЕРЕВОДА...";
+        btn.innerText = "РИТУАЛЬНЫЙ ПЕРЕВОД...";
         
         const duration = 3000; 
         const startTime = Date.now();
@@ -322,8 +332,12 @@
             if (progress < 1) {
                 requestAnimationFrame(update);
             } else {
-                textDisplay.innerText = initialDeposit;
-                setTimeout(redirectToMono, 1000);
+                // ФИНАЛЬНЫЙ МОМЕНТ
+                textDisplay.innerText = "ОЧИЩЕНИЕ КАРМЫ 100%";
+                textDisplay.style.fontSize = "clamp(1.2rem, 5vw, 2.2rem)";
+                label.style.opacity = "0";
+                
+                setTimeout(redirectToMono, 1200);
             }
         }
         
