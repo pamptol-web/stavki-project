@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>СТАВКИ-ХУЯВКИ</title>
+    <style>
+        :root {
+            --neon-green: #39ff14;
+            --bg-black: #050505;
+            --card-gray: #121212;
+        }
+
+        /* Убираем лишние отступы и системные выделения на мобилках */
+        * {
+            box-sizing: border-box;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        body {
+            font-family: 'Impact', 'Arial Black', sans-serif;
+            background-color: var(--bg-black);
+            color: #fff;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            margin: 0;
+            padding: 20px;
+            text-transform: uppercase;
+        }
+
+        .payment-card {
+            background: var(--card-gray);
+            padding: 2rem;
+            width: 100%;
+            max-width: 350px;
+            text-align: center;
+            border: 3px solid var(--neon-green);
+            box-shadow: 0 0 20px rgba(57, 255, 20, 0.3);
+        }
+
+        .logo {
+            font-size: 2.2rem;
+            line-height: 1;
+            margin-bottom: 10px;
+            color: var(--neon-green);
+            text-shadow: 0 0 10px var(--neon-green);
+        }
+
+        h2 {
+            font-size: 1rem;
+            margin-bottom: 2rem;
+            letter-spacing: 1px;
+            color: #777;
+        }
+
+        /* Стилизация ввода для мобильных */
+        input {
+            width: 100%;
+            padding: 18px;
+            background: #000;
+            border: 2px solid var(--neon-green);
+            color: var(--neon-green);
+            font-size: 1.8rem;
+            text-align: center;
+            margin-bottom: 1.5rem;
+            border-radius: 0;
+            outline: none;
+            display: block;
+        }
+
+        /* Кнопка с эффектом нажатия */
+        .pay-button {
+            background-color: var(--neon-green);
+            color: #000;
+            border: none;
+            padding: 20px;
+            font-size: 1.3rem;
+            font-weight: 900;
+            cursor: pointer;
+            width: 100%;
+            transition: transform 0.1s, background-color 0.2s;
+        }
+
+        .pay-button:active {
+            transform: scale(0.95);
+            background-color: #fff;
+        }
+
+        .footer-note {
+            margin-top: 1.5rem;
+            font-size: 0.65rem;
+            color: #444;
+            line-height: 1.4;
+        }
+    </style>
+</head>
+<body>
+
+<div class="payment-card">
+    <div class="logo">СТАВКИ<br>ХУЯВКИ</div>
+    <h2>Заряжай на победу</h2>
+    
+    <input type="number" id="amount" placeholder="0.00" inputmode="decimal" min="10">
+
+    <button class="pay-button" onclick="redirectToMono()">
+        ПОСТАВИТЬ БАБЛО
+    </button>
+
+    <div class="footer-note">
+        EMBER ARC 120 EDITION<br>
+        Рискуй ответственно, боец
+    </div>
+</div>
+
+<script>
+    function redirectToMono() {
+        const amount = document.getElementById('amount').value;
+        const MONO_JAR_URL = "https://send.monobank.ua/jar/66g9U4uZMY"; 
+
+        if (!amount || amount < 1) {
+            alert("ВВЕДИ СУММУ!");
+            return;
+        }
+
+        // Переход в приложение Monobank или на сайт
+        window.location.href = `${MONO_JAR_URL}?a=${amount}`;
+    }
+</script>
+
+</body>
+</html>
