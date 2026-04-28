@@ -3,7 +3,12 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>СТАВКИ-ХУЯВКИ</title>
+    
+    <title>СТАВКИ-ХУЯВКИ | ИДУЩИЙ К РЕКЕ</title>
+    <meta name="description" content="Я в своем познании настолько преисполнился...">
+    <meta property="og:title" content="ИДУЩИЙ К РЕКЕ">
+    <meta property="og:description" content="Поиск покоя, умиротворения и великого фрактального подобия.">
+
     <style>
         :root {
             --neon-green: #39ff14;
@@ -11,7 +16,6 @@
             --card-gray: #121212;
         }
 
-        /* Убираем лишние отступы и системные выделения на мобилках */
         * {
             box-sizing: border-box;
             -webkit-tap-highlight-color: transparent;
@@ -28,89 +32,110 @@
             margin: 0;
             padding: 20px;
             text-transform: uppercase;
+            overflow-x: hidden;
         }
 
         .payment-card {
             background: var(--card-gray);
-            padding: 2rem;
+            padding: 2.5rem;
             width: 100%;
-            max-width: 350px;
+            max-width: 420px;
             text-align: center;
             border: 3px solid var(--neon-green);
-            box-shadow: 0 0 20px rgba(57, 255, 20, 0.3);
+            box-shadow: 0 0 40px rgba(57, 255, 20, 0.2);
+            position: relative;
+            z-index: 2;
         }
 
         .logo {
-            font-size: 2.2rem;
-            line-height: 1;
-            margin-bottom: 10px;
+            font-size: 2.5rem;
+            line-height: 0.9;
+            margin-bottom: 15px;
             color: var(--neon-green);
-            text-shadow: 0 0 10px var(--neon-green);
+            text-shadow: 0 0 15px var(--neon-green);
         }
 
-        h2 {
-            font-size: 1rem;
+        .philosophy-text {
+            font-family: 'Georgia', serif;
+            text-transform: none;
+            font-size: 0.9rem;
+            line-height: 1.6;
+            color: #aaa;
             margin-bottom: 2rem;
-            letter-spacing: 1px;
-            color: #777;
+            font-style: italic;
+            text-align: justify;
+            border-left: 2px solid var(--neon-green);
+            padding-left: 15px;
         }
 
-        /* Стилизация ввода для мобильных */
         input {
             width: 100%;
-            padding: 18px;
+            padding: 20px;
             background: #000;
             border: 2px solid var(--neon-green);
             color: var(--neon-green);
-            font-size: 1.8rem;
+            font-size: 2rem;
             text-align: center;
             margin-bottom: 1.5rem;
-            border-radius: 0;
             outline: none;
             display: block;
         }
 
-        /* Кнопка с эффектом нажатия */
         .pay-button {
             background-color: var(--neon-green);
             color: #000;
             border: none;
-            padding: 20px;
-            font-size: 1.3rem;
+            padding: 22px;
+            font-size: 1.4rem;
             font-weight: 900;
             cursor: pointer;
             width: 100%;
-            transition: transform 0.1s, background-color 0.2s;
+            transition: all 0.2s;
         }
 
         .pay-button:active {
-            transform: scale(0.95);
+            transform: scale(0.96);
             background-color: #fff;
         }
 
         .footer-note {
-            margin-top: 1.5rem;
-            font-size: 0.65rem;
-            color: #444;
-            line-height: 1.4;
+            margin-top: 2rem;
+            font-size: 0.7rem;
+            color: #555;
+            letter-spacing: 2px;
+        }
+
+        .ambient-bg {
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: radial-gradient(circle at center, #111 0%, #000 100%);
+            z-index: 1;
         }
     </style>
 </head>
 <body>
 
+<div class="ambient-bg"></div>
+
 <div class="payment-card">
     <div class="logo">СТАВКИ<br>ХУЯВКИ</div>
-    <h2>Заряжай на победу</h2>
     
-    <input type="number" id="amount" placeholder="0.00" inputmode="decimal" min="10">
+    <div class="philosophy-text">
+        Я в своем познании настолько преисполнился что мне этот мир абсолютно понятен, и я здесь 
+        ищу только одного - покоя, умиротворения и вот этой гармонии, от слияния с 
+        бесконечно вечным, от созерцания великого фрактального подобия и от вот этого 
+        замечательного всеединства существа, бесконечно вечного...
+    </div>
+    
+    <input type="number" id="amount" placeholder="СУММА (UAH)" inputmode="decimal" min="10">
 
     <button class="pay-button" onclick="redirectToMono()">
-        ПОСТАВИТЬ БАБЛО
+        СЛИТЬСЯ С БЕСКОНЕЧНОСТЬЮ
     </button>
 
     <div class="footer-note">
-        EMBER ARC 120 EDITION<br>
-        Рискуй ответственно, боец
+        ПРОЕКТ: ИДУЩИЙ К РЕКЕ<br>
+        ГАРМОНИЯ И ВСЕЕДИНСТВО
     </div>
 </div>
 
@@ -120,11 +145,10 @@
         const MONO_JAR_URL = "https://send.monobank.ua/jar/66g9U4uZMY"; 
 
         if (!amount || amount < 1) {
-            alert("ВВЕДИ СУММУ!");
+            alert("ПРЕИСПОЛНИСЬ И ВВЕДИ СУММУ!");
             return;
         }
 
-        // Переход в приложение Monobank или на сайт
         window.location.href = `${MONO_JAR_URL}?a=${amount}`;
     }
 </script>
