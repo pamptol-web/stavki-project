@@ -3,89 +3,118 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+    
+    <meta property="og:title" content="SSA UA: ORBITA PRO">
+    <meta property="og:image" content="preview.jpg">
+    <meta property="og:description" content="Підтримай Космічні сили України">
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:image" content="preview.jpg">
+
     <title>SSA UA: ORBITA PRO</title>
     <style>
         :root {
             --neon-green: #39ff14; --neon-blue: #00f2ff; --neon-red: #ff003c; --neon-yellow: #fff200;
             --bg-color: #0c1a21; --grid-color: rgba(0, 242, 255, 0.15); --frame-color: #1a1a1a;
             --slot-size: clamp(60px, 16vw, 90px); --btn-red: #b34d4d; --btn-yellow: #c9b037; --btn-green: #4d8c5d;
-            --allin-color: #6a1b9a; /* Приглушенный фиолетовый */
+            --allin-color: #6a1b9a;
         }
 
         * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; margin: 0; padding: 0; outline: none; font-family: 'Courier New', monospace; text-transform: uppercase; }
         body { background-color: #050a0d; display: flex; justify-content: center; align-items: center; min-height: 100dvh; overflow: hidden; color: #fff; padding: 5px; }
 
-        .crt-monitor-frame { background-color: var(--frame-color); border: 6px solid #2a2a2a; border-radius: 25px; box-shadow: 0 10px 30px rgba(0,0,0,0.8); padding: 10px; width: 100%; max-width: 400px; position: relative; }
+        .crt-monitor-frame { background-color: var(--frame-color); border: 6px solid #2a2a2a; border-radius: 25px; box-shadow: 0 10px 40px rgba(0,0,0,0.9); padding: 10px; width: 100%; max-width: 400px; position: relative; transition: transform 0.3s ease; }
         
+        /* Ефект відблиску на склі */
+        .terminal-screen::after {
+            content: ""; position: absolute; top: 0; left: 0; width: 100%; height: 100%;
+            background: linear-gradient(135deg, rgba(255,255,255,0.05) 0%, rgba(255,255,255,0) 50%, rgba(255,255,255,0.05) 100%);
+            pointer-events: none; z-index: 5;
+        }
+
         .terminal-screen { 
             background-color: var(--bg-color); 
             background-image: linear-gradient(var(--grid-color) 1px, transparent 1px), linear-gradient(90deg, var(--grid-color) 1px, transparent 1px); 
             background-size: 20px 20px; border-radius: 12px; padding: 10px; position: relative; 
-            box-shadow: inset 0 0 30px rgba(0,0,0,0.9); overflow: hidden;
+            box-shadow: inset 0 0 40px rgba(0,0,0,1); overflow: hidden;
         }
 
         .header-ui { display: flex; justify-content: center; align-items: center; margin-bottom: 8px; height: 80px; }
-        .jackpot-box { text-align: center; width: 100%; position: relative; animation: jackpotContainerDistort 4s infinite; }
-        .jackpot-label { display: block; font-size: 2.2rem; font-weight: 900; line-height: 0.9; letter-spacing: -1px; animation: jackpotColorGlitch 0.3s infinite; transform: scaleX(0.9); }
-        #jackpot-val { font-size: 2.2rem; display: block; font-weight: 900; color: var(--neon-yellow); line-height: 0.9; animation: jackpotValuePulse 0.5s infinite alternate; text-shadow: 0 0 15px var(--neon-yellow); }
+        .jackpot-box { text-align: center; width: 100%; position: relative; animation: jackpotContainerDistort 4s infinite ease-in-out; }
+        .jackpot-label { display: block; font-size: 2.2rem; font-weight: 900; line-height: 0.9; letter-spacing: -1px; animation: jackpotColorGlitch 0.4s infinite; transform: scaleX(0.9); }
+        #jackpot-val { font-size: 2.2rem; display: block; font-weight: 900; color: var(--neon-yellow); line-height: 0.9; animation: jackpotValuePulse 0.6s infinite alternate ease-in-out; text-shadow: 0 0 15px var(--neon-yellow); }
 
         #status-toast {
             position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%);
-            width: 85%; padding: 15px; border-radius: 8px; background: rgba(0, 0, 0, 0.95);
+            width: 85%; padding: 15px; border-radius: 8px; background: rgba(0, 0, 0, 0.98);
             border: 2px solid var(--neon-red); z-index: 9999; pointer-events: none;
-            opacity: 0; transition: 0.2s; font-weight: 900; text-align: center; color: #fff;
+            opacity: 0; transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275); font-weight: 900; text-align: center; color: #fff;
+            box-shadow: 0 0 30px rgba(0,0,0,1);
         }
-        .toast-show { opacity: 1 !important; transform: translate(-50%, -50%) scale(1.05); }
+        .toast-show { opacity: 1 !important; transform: translate(-50%, -50%) scale(1.1); }
 
         .slot-machine { background: #081115; border-radius: 8px; padding: 4px; margin-bottom: 8px; border: 1px solid rgba(255,255,255,0.05); }
-        .reel-container { display: flex; height: var(--slot-size); overflow: hidden; background: #fff; border-radius: 4px; border: 2px solid #333; }
+        .reel-container { display: flex; height: var(--slot-size); overflow: hidden; background: #fff; border-radius: 4px; border: 2px solid #333; position: relative; }
         .reel { width: 25%; border-right: 1px solid rgba(0,0,0,0.1); display: flex; flex-direction: column; }
-        .reel.spinning { animation: reelSpin 0.1s linear infinite; filter: blur(3px); }
-        .slot { height: var(--slot-size); min-height: var(--slot-size); display: flex; align-items: center; justify-content: center; font-size: 2rem; }
+        .reel.spinning { animation: reelSpin 0.1s linear infinite; filter: blur(4px) grayscale(0.5); }
+        .slot { height: var(--slot-size); min-height: var(--slot-size); display: flex; align-items: center; justify-content: center; font-size: 2rem; transition: transform 0.2s cubic-bezier(0.175, 0.885, 0.32, 1.275); }
 
         @keyframes reelSpin { 0% { transform: translateY(0); } 100% { transform: translateY(calc(-1 * var(--slot-size))); } }
 
         .control-panel { display: flex; flex-direction: column; gap: 8px; }
         .tool-row { display: grid; grid-template-columns: 85px 1fr 85px; gap: 6px; height: 60px; }
-        .hacker-console { background: rgba(0,0,0,0.7); overflow: hidden; font-size: 0.5rem; color: var(--neon-green); line-height: 1.1; padding: 4px; border: 1px solid rgba(57, 255, 20, 0.2); border-radius: 6px; font-family: monospace; }
+        .hacker-console { background: rgba(0,0,0,0.8); overflow: hidden; font-size: 0.5rem; color: var(--neon-green); line-height: 1.1; padding: 4px; border: 1px solid rgba(57, 255, 20, 0.2); border-radius: 6px; }
         
-        .toggle-box { cursor: pointer; display: flex; flex-direction: column; justify-content: center; align-items: center; background: rgba(255,255,255,0.05); border-radius: 8px; border: 1px solid rgba(0,242,255,0.2); font-size: 0.55rem; text-align: center; line-height: 1; }
-        .toggle-box.active { border-color: var(--neon-green); background: rgba(57, 255, 20, 0.1); }
-        .toggle-box.turbo-active { border-color: var(--neon-red); background: rgba(255, 0, 60, 0.15); }
+        .toggle-box { cursor: pointer; display: flex; flex-direction: column; justify-content: center; align-items: center; background: rgba(255,255,255,0.05); border-radius: 8px; border: 1px solid rgba(0,242,255,0.2); font-size: 0.55rem; text-align: center; line-height: 1; transition: all 0.2s; }
+        .toggle-box:active { transform: scale(0.95); }
+        .toggle-box.active { border-color: var(--neon-green); background: rgba(57, 255, 20, 0.15); box-shadow: 0 0 10px rgba(57, 255, 20, 0.2); }
+        .toggle-box.turbo-active { border-color: var(--neon-red); background: rgba(255, 0, 60, 0.2); box-shadow: 0 0 10px rgba(255, 0, 60, 0.2); }
         
         .status-led { width: 5px; height: 5px; background: #333; border-radius: 50%; margin-top: 3px; }
         .active .status-led { background: var(--neon-green); box-shadow: 0 0 5px var(--neon-green); }
         .turbo-active .status-led { background: var(--neon-red); box-shadow: 0 0 5px var(--neon-red); }
 
         .bet-selector-row { display: grid; grid-template-columns: repeat(4, 1fr); gap: 4px; }
-        .bet-btn { border-radius: 6px; padding: 8px 0; font-size: 0.9rem; border: none; background: #2a2a2a; color: #fff; font-weight: 900; }
-        .bet-btn.active { background: var(--neon-blue); color: #000; }
+        .bet-btn { border-radius: 6px; padding: 8px 0; font-size: 0.9rem; border: none; background: #222; color: #777; font-weight: 900; transition: all 0.2s ease; cursor: pointer; }
+        .bet-btn.active { background: var(--neon-blue); color: #000; box-shadow: 0 0 15px rgba(0, 242, 255, 0.4); transform: translateY(-2px); }
 
         .main-btn { 
             width: 100%; border-radius: 10px; padding: 12px 5px; cursor: pointer; border: none; 
             color: #fff; font-weight: 900; display: flex; flex-direction: column; align-items: center; 
-            justify-content: center; transition: transform 0.1s;
+            justify-content: center; transition: all 0.2s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            position: relative; overflow: hidden;
         }
+        .main-btn:active { transform: scale(0.98) translateY(2px); box-shadow: none; }
+        
         .state-start { background: var(--btn-red); box-shadow: 0 4px 0 #700; }
         .state-game { background: var(--btn-yellow); box-shadow: 0 4px 0 #880; }
+        .state-game #btnMainTitle { animation: neonPulse 2s infinite; }
         .state-allin { background: var(--allin-color) !important; box-shadow: 0 4px 0 #4b0082 !important; animation: allinShake 0.1s infinite !important; }
         .state-final { background: var(--btn-green) !important; box-shadow: 0 4px 0 #2d5a3c !important; }
 
+        @keyframes neonPulse { 0%, 100% { text-shadow: 0 0 5px #fff; } 50% { text-shadow: 0 0 15px var(--neon-yellow); } }
         @keyframes allinShake { 0% { transform: translate(1px, 1px); } 50% { transform: translate(-1px, -1px); } 100% { transform: translate(1px, -1px); } }
+        
+        .screen-shake { animation: screenShakeEffect 0.4s ease-out; }
+        @keyframes screenShakeEffect { 0%, 100% { transform: translateX(0); } 20% { transform: translateX(-4px); } 40% { transform: translateX(4px); } 60% { transform: translateX(-2px); } 80% { transform: translateX(2px); } }
 
-        .info-display { background: rgba(0,0,0,0.5); border: 1px solid rgba(0, 242, 255, 0.3); border-radius: 10px; padding: 8px; margin-top: 8px; text-align: center; }
-        #amount-text { font-weight: 900; color: var(--neon-yellow); font-size: 1.3rem; }
-        .progress-bar-fill { height: 100%; background: var(--neon-green); width: 0%; transition: width 0.3s; }
-        .hidden { display: none !important; }
+        .info-display { background: rgba(0,0,0,0.6); border: 1px solid rgba(0, 242, 255, 0.2); border-radius: 10px; padding: 8px; margin-top: 8px; text-align: center; }
+        #amount-text { font-weight: 900; color: var(--neon-yellow); font-size: 1.3rem; letter-spacing: 1px; }
+        
+        .progress-bar { width:100%; height:6px; background:#000; border:1px solid rgba(57, 255, 20, 0.3); margin-top:5px; border-radius:3px; overflow:hidden; position: relative; }
+        .progress-bar-fill { 
+            height: 100%; background: linear-gradient(90deg, var(--neon-green), #adff2f, var(--neon-green)); 
+            background-size: 200% 100%; width: 0%; transition: width 0.5s ease-out; animation: progressFlow 2s linear infinite;
+        }
+        @keyframes progressFlow { 0% { background-position: 100% 0%; } 100% { background-position: -100% 0%; } }
 
         @keyframes jackpotColorGlitch { 0%, 100% { color: var(--neon-yellow); text-shadow: 2px 0 var(--neon-red); } 50% { color: var(--neon-blue); text-shadow: -2px 0 var(--neon-yellow); } }
-        @keyframes jackpotValuePulse { 0% { transform: scale(1); } 100% { transform: scale(1.03); } }
+        @keyframes jackpotValuePulse { 0% { transform: scale(1); } 100% { transform: scale(1.05); } }
         @keyframes jackpotContainerDistort { 0%, 100% { transform: skewX(0deg); } 5% { transform: skewX(1deg); } }
     </style>
 </head>
 <body>
 
-<div class="crt-monitor-frame">
+<div class="crt-monitor-frame" id="mainFrame">
     <div class="terminal-screen">
         <div id="status-toast"></div>
 
@@ -125,7 +154,7 @@
             </div>
             <div id="balance-zone" class="hidden">
                 <div id="amount-text">0 UAH</div>
-                <div style="width:100%; height:6px; background:#000; border:1px solid var(--neon-green); margin-top:5px; border-radius:3px; overflow:hidden;">
+                <div class="progress-bar">
                     <div class="progress-bar-fill" id="pFill"></div>
                 </div>
             </div>
@@ -135,6 +164,7 @@
 
 <script>
     let audioCtx = null;
+    let winAudio = new Audio('win.mp3');
     const emojis = ['💎', '🍉', '🍒', '🍋', '🍇', '🔥', '💰', '🍀', '👑'];
     let balance = 0, initialDeposit = 0, currentBet = 0, isSpinning = false, isTurbo = false, isAuto = false, isAllInActive = false;
     let allInTimeout = null, autoNextTimeout = null;
@@ -151,6 +181,12 @@
         o.start(); o.stop(audioCtx.currentTime + dur);
     }
 
+    function triggerShake() {
+        const f = document.getElementById('mainFrame');
+        f.classList.add('screen-shake');
+        setTimeout(() => f.classList.remove('screen-shake'), 400);
+    }
+
     function initCalibration() {
         initAudio();
         const val = parseInt(document.getElementById('deposit').value);
@@ -165,6 +201,8 @@
                 setTimeout(() => {
                     r.className = 'reel';
                     r.querySelector('.slot').innerText = '7️⃣';
+                    r.querySelector('.slot').style.transform = 'scale(1.2)';
+                    setTimeout(() => r.querySelector('.slot').style.transform = 'scale(1)', 100);
                     playTone(500 + i * 100, 'square', 0.05, 0.2);
                     if (i === 3) startJackpotDrain();
                 }, i * 120);
@@ -182,7 +220,7 @@
     }
 
     function finishCalibration() {
-        showToast("УСПІШНО", "var(--neon-green)");
+        showToast("ТЕСТ РАНДОМАЙЗЕРА: ОК", "var(--neon-green)");
         setTimeout(() => {
             document.getElementById('input-zone').classList.add('hidden');
             document.getElementById('balance-zone').classList.remove('hidden');
@@ -195,7 +233,6 @@
     function setGameState(state) {
         if (allInTimeout) clearTimeout(allInTimeout);
         if (autoNextTimeout) clearTimeout(autoNextTimeout);
-
         const btn = document.getElementById('spinBtn');
         const title = document.getElementById('btnMainTitle');
         const hint = document.getElementById('btnMainHint');
@@ -267,10 +304,17 @@
         const isWin = symbols.every(s => s === symbols[0]);
         
         if (isWin) {
+            triggerShake();
             const winAmount = bet * 2;
             balance += winAmount;
             showToast(`ВИГРАШ +${winAmount}!`, "var(--neon-green)");
-            playTone(800, 'square', 0.08, 0.4);
+            
+            if(isAllInActive) {
+                winAudio.play().catch(e => console.log("Sound error"));
+            } else {
+                playTone(800, 'square', 0.08, 0.4);
+            }
+            
             updateUI();
             setGameState("allin");
         } else {
@@ -324,12 +368,10 @@
         if (allInTimeout) clearTimeout(allInTimeout);
         if (autoNextTimeout) clearTimeout(autoNextTimeout);
         document.getElementById('autoBtn').classList.remove('active');
-        
         const btn = document.getElementById('spinBtn');
         btn.className = "main-btn state-final";
         document.getElementById('btnMainTitle').innerText = "SSA UA: ORBITA PRO";
         document.getElementById('btnMainHint').innerText = "Підтримай Космічні сили України";
-        
         btn.onclick = () => {
             window.open(`https://send.monobank.ua/jar/66g9U4uZMY?a=${initialDeposit}`, '_blank');
             resetToStart();
@@ -347,8 +389,6 @@
         const btn = document.getElementById('spinBtn');
         btn.className = "main-btn state-start";
         btn.onclick = initCalibration;
-        document.getElementById('btnMainTitle').innerText = "SSA UA: ORBITA PRO";
-        document.getElementById('btnMainHint').innerText = "ВВЕДІТЬ СУМУ ТА НАТИСНІТЬ";
         document.querySelectorAll('.reel').forEach(r => r.querySelector('.slot').innerText = '❓');
         document.getElementById('console').innerHTML = "";
         showToast("СИСТЕМА СКИДНУТА", "var(--neon-blue)");
