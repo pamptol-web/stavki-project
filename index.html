@@ -3,395 +3,222 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
-    
-    <meta property="og:title" content="SSA UA: ORBITA PRO">
-    <meta property="og:image" content="preview.jpg">
-    <meta property="og:description" content="Підтримай Космічні сили України">
-    <meta name="twitter:card" content="summary_large_image">
-    <meta name="twitter:image" content="preview.jpg">
-
-    <title>SSA UA: ORBITA PRO</title>
+    <title>SSA UA: ORBITA PRO | V13 HIGH STAKES</title>
     <style>
         :root {
-            --neon-green: #39ff14; --neon-blue: #00f2ff; --neon-red: #ff003c; --neon-yellow: #fff200;
-            --bg-color: #0c1a21; --grid-color: rgba(0, 242, 255, 0.15); --frame-color: #1a1a1a;
-            --slot-size: clamp(60px, 16vw, 90px); --btn-red: #b34d4d; --btn-yellow: #c9b037; --btn-green: #4d8c5d;
-            --allin-color: #6a1b9a;
+            --neon-green: #32d74b; --neon-blue: #0a84ff; --neon-red: #ff453a; --neon-yellow: #ffd60a;
+            --bg-color: #000000; --grid-color: rgba(255, 255, 255, 0.04); --frame-color: rgba(28, 28, 30, 0.85);
+            --slot-size: clamp(60px, 16vw, 90px);
+            --glass-bg: rgba(255, 255, 255, 0.08);
+            --glass-border: rgba(255, 255, 255, 0.15);
         }
-
-        * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; margin: 0; padding: 0; outline: none; font-family: 'Courier New', monospace; text-transform: uppercase; }
-        body { background-color: #050a0d; display: flex; justify-content: center; align-items: center; min-height: 100dvh; overflow: hidden; color: #fff; padding: 5px; }
-
-        .crt-monitor-frame { background-color: var(--frame-color); border: 6px solid #2a2a2a; border-radius: 25px; box-shadow: 0 10px 40px rgba(0,0,0,0.9); padding: 10px; width: 100%; max-width: 400px; position: relative; transition: transform 0.3s ease; }
+        * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; margin: 0; padding: 0; outline: none; 
+            font-family: -apple-system, BlinkMacSystemFont, "SF Pro Display", sans-serif; text-transform: uppercase; letter-spacing: 0.3px; }
+        body { background-color: #000; display: flex; justify-content: center; align-items: center; min-height: 100dvh; overflow: hidden; color: #fff; padding: 5px; }
+        body::before { content: " "; position: absolute; inset: 0; background: radial-gradient(circle at 50% -20%, rgba(10, 132, 255, 0.18), transparent 70%); z-index: 1; pointer-events: none; }
         
-        /* Ефект відблиску на склі */
-        .terminal-screen::after {
-            content: ""; position: absolute; top: 0; left: 0; width: 100%; height: 100%;
-            background: linear-gradient(135deg, rgba(255,255,255,0.05) 0%, rgba(255,255,255,0) 50%, rgba(255,255,255,0.05) 100%);
-            pointer-events: none; z-index: 5;
-        }
+        .crt-monitor-frame { background: var(--frame-color); backdrop-filter: blur(50px); -webkit-backdrop-filter: blur(50px); border-radius: 40px; border: 1px solid rgba(255,255,255,0.12); padding: 14px; width: 100%; max-width: 400px; position: relative; z-index: 10; box-shadow: 0 50px 100px rgba(0,0,0,0.8); }
+        .terminal-screen { background-color: #08080a; border-radius: 28px; padding: 14px; position: relative; min-height: 520px; display: flex; flex-direction: column; justify-content: space-between; overflow: hidden; border: 1px solid rgba(255,255,255,0.05); }
+        
+        #status-toast { position: absolute; top: 15px; left: 50%; transform: translate(-50%, -200%) scale(0.5); padding: 12px 24px; border-radius: 40px; background: rgba(20, 20, 22, 0.98); border: 1px solid var(--neon-blue); z-index: 9999; opacity: 0; font-weight: 800; text-align: center; width: 85%; transition: 0.4s cubic-bezier(0.25, 1, 0.5, 1); pointer-events: none; }
+        .toast-show { transform: translate(-50%, 0) scale(1) !important; opacity: 1 !important; }
 
-        .terminal-screen { 
-            background-color: var(--bg-color); 
-            background-image: linear-gradient(var(--grid-color) 1px, transparent 1px), linear-gradient(90deg, var(--grid-color) 1px, transparent 1px); 
-            background-size: 20px 20px; border-radius: 12px; padding: 10px; position: relative; 
-            box-shadow: inset 0 0 40px rgba(0,0,0,1); overflow: hidden;
-        }
-
-        .header-ui { display: flex; justify-content: center; align-items: center; margin-bottom: 8px; height: 80px; }
-        .jackpot-box { text-align: center; width: 100%; position: relative; animation: jackpotContainerDistort 4s infinite ease-in-out; }
-        .jackpot-label { display: block; font-size: 2.2rem; font-weight: 900; line-height: 0.9; letter-spacing: -1px; animation: jackpotColorGlitch 0.4s infinite; transform: scaleX(0.9); }
-        #jackpot-val { font-size: 2.2rem; display: block; font-weight: 900; color: var(--neon-yellow); line-height: 0.9; animation: jackpotValuePulse 0.6s infinite alternate ease-in-out; text-shadow: 0 0 15px var(--neon-yellow); }
-
-        #status-toast {
-            position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%);
-            width: 85%; padding: 15px; border-radius: 8px; background: rgba(0, 0, 0, 0.98);
-            border: 2px solid var(--neon-red); z-index: 9999; pointer-events: none;
-            opacity: 0; transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275); font-weight: 900; text-align: center; color: #fff;
-            box-shadow: 0 0 30px rgba(0,0,0,1);
-        }
-        .toast-show { opacity: 1 !important; transform: translate(-50%, -50%) scale(1.1); }
-
-        .slot-machine { background: #081115; border-radius: 8px; padding: 4px; margin-bottom: 8px; border: 1px solid rgba(255,255,255,0.05); }
-        .reel-container { display: flex; height: var(--slot-size); overflow: hidden; background: #fff; border-radius: 4px; border: 2px solid #333; position: relative; }
-        .reel { width: 25%; border-right: 1px solid rgba(0,0,0,0.1); display: flex; flex-direction: column; }
-        .reel.spinning { animation: reelSpin 0.1s linear infinite; filter: blur(4px) grayscale(0.5); }
-        .slot { height: var(--slot-size); min-height: var(--slot-size); display: flex; align-items: center; justify-content: center; font-size: 2rem; transition: transform 0.2s cubic-bezier(0.175, 0.885, 0.32, 1.275); }
-
+        .slot-machine { background: rgba(255,255,255,0.03); border-radius: 24px; padding: 6px; border: 1px solid var(--glass-border); }
+        .reel-container { display: flex; height: var(--slot-size); overflow: hidden; background: rgba(0,0,0,0.7); border-radius: 18px; }
+        .reel { width: 25%; border-right: 1px solid rgba(255,255,255,0.05); display: flex; flex-direction: column; }
+        .reel.spinning { animation: reelSpin 0.08s linear infinite; filter: blur(6px); }
+        .reel.stop-thud { animation: reelBounce 0.5s cubic-bezier(0.34, 1.56, 0.64, 1) forwards; }
+        @keyframes reelBounce { 0% { transform: translateY(-20px); } 100% { transform: translateY(0); } }
         @keyframes reelSpin { 0% { transform: translateY(0); } 100% { transform: translateY(calc(-1 * var(--slot-size))); } }
 
-        .control-panel { display: flex; flex-direction: column; gap: 8px; }
-        .tool-row { display: grid; grid-template-columns: 85px 1fr 85px; gap: 6px; height: 60px; }
-        .hacker-console { background: rgba(0,0,0,0.8); overflow: hidden; font-size: 0.5rem; color: var(--neon-green); line-height: 1.1; padding: 4px; border: 1px solid rgba(57, 255, 20, 0.2); border-radius: 6px; }
+        .slot { height: var(--slot-size); min-height: var(--slot-size); display: flex; align-items: center; justify-content: center; font-size: 3.2rem; }
+        .btn-glass { border-radius: 14px; padding: 10px 0; font-size: 0.85rem; border: 1px solid var(--glass-border); background: var(--glass-bg); color: rgba(255,255,255,0.6); font-weight: 800; cursor: pointer; transition: 0.3s; }
+        .btn-glass.active { background: #fff; color: #000; border-color: #fff; }
         
-        .toggle-box { cursor: pointer; display: flex; flex-direction: column; justify-content: center; align-items: center; background: rgba(255,255,255,0.05); border-radius: 8px; border: 1px solid rgba(0,242,255,0.2); font-size: 0.55rem; text-align: center; line-height: 1; transition: all 0.2s; }
-        .toggle-box:active { transform: scale(0.95); }
-        .toggle-box.active { border-color: var(--neon-green); background: rgba(57, 255, 20, 0.15); box-shadow: 0 0 10px rgba(57, 255, 20, 0.2); }
-        .toggle-box.turbo-active { border-color: var(--neon-red); background: rgba(255, 0, 60, 0.2); box-shadow: 0 0 10px rgba(255, 0, 60, 0.2); }
-        
-        .status-led { width: 5px; height: 5px; background: #333; border-radius: 50%; margin-top: 3px; }
-        .active .status-led { background: var(--neon-green); box-shadow: 0 0 5px var(--neon-green); }
-        .turbo-active .status-led { background: var(--neon-red); box-shadow: 0 0 5px var(--neon-red); }
+        .main-btn { width: 100%; border-radius: 22px; padding: 18px 5px; cursor: pointer; border: none; font-weight: 900; background: linear-gradient(180deg, #ffd60a 0%, #ff9f0a 100%); color: #111; margin-top: 10px; font-size: 1rem; box-shadow: 0 10px 20px rgba(255, 159, 10, 0.3); }
+        .state-start { background: linear-gradient(180deg, #ff5147 0%, #ff3b30 100%); color: #fff; box-shadow: 0 10px 20px rgba(255, 59, 48, 0.3); }
 
-        .bet-selector-row { display: grid; grid-template-columns: repeat(4, 1fr); gap: 4px; }
-        .bet-btn { border-radius: 6px; padding: 8px 0; font-size: 0.9rem; border: none; background: #222; color: #777; font-weight: 900; transition: all 0.2s ease; cursor: pointer; }
-        .bet-btn.active { background: var(--neon-blue); color: #000; box-shadow: 0 0 15px rgba(0, 242, 255, 0.4); transform: translateY(-2px); }
+        .panic-btn-styled { width: 100%; margin-top: 12px; padding: 10px; border-radius: 12px; background: rgba(255, 69, 58, 0.1); border: 1px solid rgba(255, 69, 58, 0.4); color: var(--neon-red); font-size: 0.7rem; font-weight: 800; cursor: pointer; backdrop-filter: blur(10px); transition: 0.3s; }
+        .panic-btn-styled:active { background: var(--neon-red); color: #fff; }
 
-        .main-btn { 
-            width: 100%; border-radius: 10px; padding: 12px 5px; cursor: pointer; border: none; 
-            color: #fff; font-weight: 900; display: flex; flex-direction: column; align-items: center; 
-            justify-content: center; transition: all 0.2s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-            position: relative; overflow: hidden;
-        }
-        .main-btn:active { transform: scale(0.98) translateY(2px); box-shadow: none; }
-        
-        .state-start { background: var(--btn-red); box-shadow: 0 4px 0 #700; }
-        .state-game { background: var(--btn-yellow); box-shadow: 0 4px 0 #880; }
-        .state-game #btnMainTitle { animation: neonPulse 2s infinite; }
-        .state-allin { background: var(--allin-color) !important; box-shadow: 0 4px 0 #4b0082 !important; animation: allinShake 0.1s infinite !important; }
-        .state-final { background: var(--btn-green) !important; box-shadow: 0 4px 0 #2d5a3c !important; }
-
-        @keyframes neonPulse { 0%, 100% { text-shadow: 0 0 5px #fff; } 50% { text-shadow: 0 0 15px var(--neon-yellow); } }
-        @keyframes allinShake { 0% { transform: translate(1px, 1px); } 50% { transform: translate(-1px, -1px); } 100% { transform: translate(1px, -1px); } }
-        
-        .screen-shake { animation: screenShakeEffect 0.4s ease-out; }
-        @keyframes screenShakeEffect { 0%, 100% { transform: translateX(0); } 20% { transform: translateX(-4px); } 40% { transform: translateX(4px); } 60% { transform: translateX(-2px); } 80% { transform: translateX(2px); } }
-
-        .info-display { background: rgba(0,0,0,0.6); border: 1px solid rgba(0, 242, 255, 0.2); border-radius: 10px; padding: 8px; margin-top: 8px; text-align: center; }
-        #amount-text { font-weight: 900; color: var(--neon-yellow); font-size: 1.3rem; letter-spacing: 1px; }
-        
-        .progress-bar { width:100%; height:6px; background:#000; border:1px solid rgba(57, 255, 20, 0.3); margin-top:5px; border-radius:3px; overflow:hidden; position: relative; }
-        .progress-bar-fill { 
-            height: 100%; background: linear-gradient(90deg, var(--neon-green), #adff2f, var(--neon-green)); 
-            background-size: 200% 100%; width: 0%; transition: width 0.5s ease-out; animation: progressFlow 2s linear infinite;
-        }
-        @keyframes progressFlow { 0% { background-position: 100% 0%; } 100% { background-position: -100% 0%; } }
-
-        @keyframes jackpotColorGlitch { 0%, 100% { color: var(--neon-yellow); text-shadow: 2px 0 var(--neon-red); } 50% { color: var(--neon-blue); text-shadow: -2px 0 var(--neon-yellow); } }
-        @keyframes jackpotValuePulse { 0% { transform: scale(1); } 100% { transform: scale(1.05); } }
-        @keyframes jackpotContainerDistort { 0%, 100% { transform: skewX(0deg); } 5% { transform: skewX(1deg); } }
+        #deposit { background:transparent; border:none; color:#fff; font-size:2.5rem; text-align:center; width:100%; font-weight:900; margin: 10px 0; }
+        .hidden { display: none !important; }
+        .qr-wrapper { background: #fff; padding: 12px; border-radius: 20px; display: inline-block; margin: 15px 0; }
+        .mute-btn { width: 44px; height: 44px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 1.2rem; }
     </style>
 </head>
 <body>
 
-<div class="crt-monitor-frame" id="mainFrame">
+<div class="crt-monitor-frame">
     <div class="terminal-screen">
         <div id="status-toast"></div>
-
-        <div class="header-ui">
-            <div class="jackpot-box">
-                <span class="jackpot-label">JACKPOT</span>
-                <span id="jackpot-val">1000</span>
+        <div id="game-ui">
+            <div style="display:flex; justify-content:space-between; align-items:center; height:100px; padding: 0 10px;">
+                <div style="width:44px;"></div>
+                <div style="text-align:center;">
+                    <span style="color:rgba(255,255,255,0.3); font-size:0.7rem; font-weight:800; letter-spacing: 2px;">STRATEGIC JACKPOT</span>
+                    <div id="jackpot-val" style="font-size:3rem; font-weight:900; color:var(--neon-yellow); line-height:1;">1000</div>
+                </div>
+                <div class="btn-glass mute-btn" id="muteToggle" onclick="toggleSound()">🔊</div>
             </div>
-        </div>
-        
-        <div class="slot-machine">
-            <div class="reel-container">
-                <div class="reel" id="reel1"><div class="slot">❓</div></div>
-                <div class="reel" id="reel2"><div class="slot">❓</div></div>
-                <div class="reel" id="reel3"><div class="slot">❓</div></div>
-                <div class="reel" id="reel4"><div class="slot">❓</div></div>
-            </div>
-        </div>
-
-        <div class="control-panel">
-            <div class="tool-row">
-                <div class="toggle-box" id="turboBtn"><div>ТУРБО<br>SPIN</div><div class="status-led"></div></div>
-                <div class="hacker-console" id="console"></div>
-                <div class="toggle-box" id="autoBtn"><div>АВТО<br>SPIN</div><div class="status-led"></div></div>
-            </div>
-            <div id="betRow" class="bet-selector-row"></div>
             
-            <button class="main-btn state-start" id="spinBtn" onclick="initCalibration()">
-                <div id="btnMainTitle">SSA UA: ORBITA PRO</div>
-                <div id="btnMainHint" style="font-size: 0.6rem; opacity: 0.8;">ВВЕДІТЬ СУМУ ТА НАТИСНІТЬ</div>
-            </button>
-        </div>
+            <div class="slot-machine"><div class="reel-container"><div class="reel" id="reel1"><div class="slot">❓</div></div><div class="reel" id="reel2"><div class="slot">❓</div></div><div class="reel" id="reel3"><div class="slot">❓</div></div><div class="reel" id="reel4"><div class="slot">❓</div></div></div></div>
 
-        <div class="info-display">
-            <div id="input-zone">
-                <input type="number" id="deposit" style="background:transparent; border:none; color:var(--neon-yellow); font-size:1.8rem; text-align:center; width:100%; font-weight:900;" placeholder="0000">
+            <div class="control-panel" style="margin-top:20px;">
+                <div style="display:grid; grid-template-columns: 1fr 1fr; gap:8px; margin-bottom:10px;">
+                    <button class="btn-glass" id="turboBtn" onclick="isTurbo=!isTurbo; playClick(); this.classList.toggle('active')">TURBO MODE</button>
+                    <button class="btn-glass" id="autoBtn" onclick="isAuto=!isAuto; playClick(); this.classList.toggle('active'); if(isAuto) handleSpin()">AUTO SPIN</button>
+                </div>
+                <div id="betRow" style="display:grid; grid-template-columns:repeat(4,1fr); gap:8px;"></div>
+                <button class="main-btn state-start" id="mainBtn" onclick="handleMainAction()">SSA UA: ORBITA PRO</button>
             </div>
-            <div id="balance-zone" class="hidden">
-                <div id="amount-text">0 UAH</div>
-                <div class="progress-bar">
-                    <div class="progress-bar-fill" id="pFill"></div>
+
+            <div style="background:var(--glass-bg); border-radius:24px; padding:16px; margin-top:15px; text-align:center; border: 1px solid var(--glass-border);">
+                <div id="input-zone"><input type="number" id="deposit" placeholder="0000" inputmode="numeric"></div>
+                <div id="balance-zone" class="hidden">
+                    <div id="amount-text" style="font-size:1.8rem; font-weight:900;">0 UAH</div>
+                    <button id="panicBtn" class="panic-btn-styled" onclick="showFinal()">ЕКСТРЕНИЙ ДОНАТ</button>
                 </div>
             </div>
+        </div>
+
+        <div id="final-screen" class="hidden" style="text-align:center; padding: 25px;">
+            <h2 style="font-size:1.6rem;">СИМУЛЯЦІЮ ЗАВЕРШЕНО</h2>
+            <div id="final-amount" style="font-size:3rem; color:var(--neon-yellow); font-weight:900; margin:15px 0;">0 UAH</div>
+            <div class="qr-wrapper"><img id="qr-img" src="" width="160" height="160"></div>
+            <button class="main-btn" onclick="window.open('https://send.monobank.ua/jar/66g9U4uZMY')" style="background:var(--neon-green); color:#fff;">ПЕРЕКАЗАТИ НА БАНКУ</button>
+            <button class="main-btn" onclick="location.reload()" style="background:rgba(255,255,255,0.1); color:#fff; font-size:0.8rem; margin-top:12px;">НОВИЙ ЦИКЛ</button>
         </div>
     </div>
 </div>
 
 <script>
+    let balance = 0, currentBet = 0, isSpinning = false, isTurbo = false, isAuto = false, jackpot = 1000, initialDep = 0, staticBets = [], isMuted = false;
     let audioCtx = null;
-    let winAudio = new Audio('win.mp3');
-    const emojis = ['💎', '🍉', '🍒', '🍋', '🍇', '🔥', '💰', '🍀', '👑'];
-    let balance = 0, initialDeposit = 0, currentBet = 0, isSpinning = false, isTurbo = false, isAuto = false, isAllInActive = false;
-    let allInTimeout = null, autoNextTimeout = null;
+
+    const emojis = ['🚀', '🚜', '🛰️', '☕', '🗑️', '👑', '🍉', '🔥', '🔱'];
+    const winConfig = { 
+        '🚀': { label: 'ЗАПУСК НЕПТУНА', mult: 2.5 }, '🚜': { label: 'ТРАКТОРНІ ВІЙСЬКА', mult: 2.5 },
+        '🛰️': { label: 'СУПУТНИК ICEYE', mult: 4 }, '☕': { label: 'КАВА В ЯЛТІ', mult: 2 },
+        '🗑️': { label: 'ЧОРНИЙ ПАКЕТ', mult: 2 }, '🔥': { label: 'БАВОВНА!', mult: 5 },
+        '🍉': { label: 'БАЗА: ХЕРСОН', mult: 3 }, '🔱': { label: 'ВОЛЯ: WILD x2', mult: 2 }, '👑': { label: 'JACKPOT!', mult: 0 }
+    };
 
     function initAudio() { if (!audioCtx) audioCtx = new (window.AudioContext || window.webkitAudioContext)(); }
-    
-    function playTone(f, type, vol, dur) {
-        if (!audioCtx) return;
-        const o = audioCtx.createOscillator(), g = audioCtx.createGain();
-        o.type = type; o.frequency.setValueAtTime(f, audioCtx.currentTime);
-        g.gain.setValueAtTime(vol, audioCtx.currentTime);
-        g.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + dur);
-        o.connect(g); g.connect(audioCtx.destination);
-        o.start(); o.stop(audioCtx.currentTime + dur);
+    function playTone(freq, type, vol, dur) {
+        if (!audioCtx || isMuted) return;
+        const osc = audioCtx.createOscillator(); const gain = audioCtx.createGain();
+        osc.type = type; osc.frequency.setValueAtTime(freq, audioCtx.currentTime);
+        gain.gain.setValueAtTime(vol, audioCtx.currentTime);
+        gain.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + dur);
+        osc.connect(gain); gain.connect(audioCtx.destination);
+        osc.start(); osc.stop(audioCtx.currentTime + dur);
     }
+    function playClick() { playTone(800, 'square', 0.05, 0.05); }
+    function toggleSound() { isMuted = !isMuted; document.getElementById('muteToggle').innerText = isMuted ? '🔇' : '🔊'; playClick(); }
 
-    function triggerShake() {
-        const f = document.getElementById('mainFrame');
-        f.classList.add('screen-shake');
-        setTimeout(() => f.classList.remove('screen-shake'), 400);
-    }
-
-    function initCalibration() {
-        initAudio();
-        const val = parseInt(document.getElementById('deposit').value);
-        if (isNaN(val) || val <= 0) { showToast("ВВЕДІТЬ ДЕПОЗИТ"); return; }
-        initialDeposit = balance = val;
-        document.getElementById('spinBtn').disabled = true;
-        const reels = document.querySelectorAll('.reel');
-        reels.forEach(r => r.className = 'reel spinning');
-        
-        setTimeout(() => {
-            reels.forEach((r, i) => {
-                setTimeout(() => {
-                    r.className = 'reel';
-                    r.querySelector('.slot').innerText = '7️⃣';
-                    r.querySelector('.slot').style.transform = 'scale(1.2)';
-                    setTimeout(() => r.querySelector('.slot').style.transform = 'scale(1)', 100);
-                    playTone(500 + i * 100, 'square', 0.05, 0.2);
-                    if (i === 3) startJackpotDrain();
-                }, i * 120);
-            });
-        }, 600);
-    }
-
-    function startJackpotDrain() {
-        let current = 1000;
-        const interval = setInterval(() => {
-            current -= 25;
-            if (current <= 0) { current = 0; clearInterval(interval); finishCalibration(); }
-            document.getElementById('jackpot-val').innerText = current;
-        }, 20);
-    }
-
-    function finishCalibration() {
-        showToast("ТЕСТ РАНДОМАЙЗЕРА: ОК", "var(--neon-green)");
-        setTimeout(() => {
+    function handleMainAction() {
+        initAudio(); playClick();
+        if (balance === 0) {
+            const input = document.getElementById('deposit'); const val = parseInt(input.value);
+            if (isNaN(val) || val <= 0) { showToast("ВВЕДІТЬ СУМУ!", "#ff453a"); input.focus(); return; }
+            initialDep = balance = val;
+            staticBets = [5, 10, 25, 50].map(p => Math.floor(initialDep * (p/100)) || 1);
+            currentBet = staticBets[0];
             document.getElementById('input-zone').classList.add('hidden');
             document.getElementById('balance-zone').classList.remove('hidden');
-            setGameState("normal");
-            currentBet = Math.max(1, Math.floor(balance * 0.05));
-            updateUI(); updateBetButtons();
-        }, 1200);
+            document.getElementById('mainBtn').className = "main-btn";
+            document.getElementById('mainBtn').innerText = "ГЕНЕРУВАТИ SPIN";
+            updateUI(); createBetButtons();
+        } else { handleSpin(); }
     }
 
-    function setGameState(state) {
-        if (allInTimeout) clearTimeout(allInTimeout);
-        if (autoNextTimeout) clearTimeout(autoNextTimeout);
-        const btn = document.getElementById('spinBtn');
-        const title = document.getElementById('btnMainTitle');
-        const hint = document.getElementById('btnMainHint');
-        btn.disabled = false;
-        
-        if (state === "normal") {
-            isAllInActive = false;
-            btn.className = "main-btn state-game";
-            btn.onclick = handleSpin;
-            title.innerText = "ГЕНЕРУВАТИ Spin";
-            hint.innerText = "НАТИСНІТЬ ДЛЯ ОБЕРТАННЯ";
-            if(isAuto && !isSpinning) autoNextTimeout = setTimeout(handleSpin, 600);
-        } else if (state === "allin") {
-            isAllInActive = true;
-            btn.className = "main-btn state-allin";
-            btn.onclick = handleAllIn;
-            title.innerText = "ALL-IN!";
-            hint.innerText = "ГРА НА ВЕСЬ БАЛАНС (4с)";
-            allInTimeout = setTimeout(() => { setGameState("normal"); }, 4000);
-        }
+    function createBetButtons() {
+        const row = document.getElementById('betRow'); row.innerHTML = '';
+        staticBets.forEach(val => {
+            const btn = document.createElement('button'); btn.className = 'btn-glass' + (val === currentBet ? ' active' : '');
+            btn.innerText = val; btn.onclick = () => { playClick(); if(!isSpinning) { currentBet = val; createBetButtons(); } };
+            row.appendChild(btn);
+        });
     }
 
     function handleSpin() {
         if (isSpinning || balance <= 0) return;
-        executeSpin(isTurbo ? currentBet * 2 : currentBet);
-    }
-
-    function handleAllIn() {
-        if (isSpinning || balance <= 0) return;
-        executeSpin(balance);
-    }
-
-    function executeSpin(cost) {
-        isSpinning = true;
-        if (balance < cost) cost = balance;
-        balance -= cost; 
+        initAudio();
+        let actualBet = balance < currentBet ? balance : currentBet;
+        isSpinning = true; balance -= actualBet; 
+        jackpot += actualBet * 0.1; // LIVE JACKPOT 10%
         updateUI();
         
-        const reels = document.querySelectorAll('.reel');
-        const spinDuration = isTurbo ? 250 : 500;
-        reels.forEach(r => r.className = 'reel spinning');
+        playTone(150, 'sawtooth', 0.1, 0.5);
+        document.querySelectorAll('.reel').forEach(r => { r.classList.remove('stop-thud'); r.classList.add('spinning'); });
         
-        const rand = Math.random();
-        let winSymbols = [];
-        
-        if (rand < 0.001) { winSymbols = ['7️⃣','7️⃣','7️⃣','7️⃣']; }
-        else if (rand < 0.151) { 
-            const s = emojis[Math.floor(Math.random() * emojis.length)];
-            winSymbols = [s, s, s, s];
-        } else {
-            for(let i=0; i<4; i++) winSymbols.push(emojis[Math.floor(Math.random()*emojis.length)]);
-            if (winSymbols.every(v => v === winSymbols[0])) winSymbols[0] = emojis[(emojis.indexOf(winSymbols[0])+1)%emojis.length];
-        }
+        const res = Array.from({length:4}, () => emojis[Math.floor(Math.random() * (emojis.length - 1))]);
+        const rng = Math.random();
+        if(rng < 0.12) res.fill(emojis[Math.floor(Math.random() * 8)]);
+        if(rng < 0.02) res.fill('🔱');
 
         setTimeout(() => {
-            reels.forEach((r, i) => {
+            document.querySelectorAll('.reel').forEach((r, i) => {
                 setTimeout(() => {
-                    r.className = 'reel';
-                    r.querySelector('.slot').innerText = winSymbols[i];
-                    playTone(200 + i*50, 'sine', 0.03, 0.1);
-                    if (i === 3) finishSpinSequence(winSymbols, cost);
-                }, i * (isTurbo ? 70 : 120));
+                    r.classList.remove('spinning'); r.classList.add('stop-thud');
+                    r.querySelector('.slot').innerText = res[i];
+                    playTone(100 - i*10, 'sine', 0.2, 0.2);
+                    if (i === 3) finishSpin(res, actualBet);
+                }, i * (isTurbo ? 50 : 180));
             });
-        }, spinDuration);
+        }, isTurbo ? 200 : 700);
     }
 
-    function finishSpinSequence(symbols, bet) {
+    function finishSpin(res, betUsed) {
         isSpinning = false;
-        const isWin = symbols.every(s => s === symbols[0]);
         
-        if (isWin) {
-            triggerShake();
-            const winAmount = bet * 2;
-            balance += winAmount;
-            showToast(`ВИГРАШ +${winAmount}!`, "var(--neon-green)");
-            
-            if(isAllInActive) {
-                winAudio.play().catch(e => console.log("Sound error"));
-            } else {
-                playTone(800, 'square', 0.08, 0.4);
-            }
-            
-            updateUI();
-            setGameState("allin");
-        } else {
-            if (balance <= 0) { runFinalRecovery(); }
-            else { setGameState("normal"); }
+        const secretKeys = ['🍉', '🚜', '🚀', '🛰️'];
+        if (secretKeys.every(k => res.includes(k))) { 
+            jackpot += 500; 
+            showToast("РЕЖИМ ВОЛЯ: +500 ДО JP!", "#0a84ff"); 
         }
+
+        if (res.every(v => v === res[0]) || res.includes('🔱')) {
+            let win = 0; const symbol = res[0];
+            if (symbol === '👑' && res.every(v => v === '👑')) {
+                win = Math.floor(jackpot); jackpot = 1000;
+                playTone(880, 'square', 0.1, 1); showToast("JACKPOT СОРВАНО!", "#ffd60a");
+            } else {
+                const cfg = winConfig[symbol] || {mult: 1.5, label: 'ВИГРАШ'};
+                let finalMult = cfg.mult;
+                win = Math.floor(betUsed * finalMult); 
+                if (res.includes('🔱')) { win *= 2; finalMult *= 2; }
+                playTone(440, 'triangle', 0.1, 0.5); 
+                showToast(`${cfg.label} x${finalMult}!`, "#32d74b");
+            }
+            balance += win; updateUI();
+        }
+        
+        if (balance <= 0) showFinal();
+        else if (isAuto) setTimeout(handleSpin, 1100);
     }
 
-    function updateUI() {
-        document.getElementById('amount-text').innerText = Math.floor(balance) + " UAH";
-        document.getElementById('pFill').style.width = (Math.min(balance / initialDeposit, 1) * 100) + "%";
+    function updateUI() { 
+        document.getElementById('amount-text').innerText = `${balance} UAH`; 
+        document.getElementById('jackpot-val').innerText = Math.floor(jackpot); 
     }
 
-    function updateBetButtons() {
-        const row = document.getElementById('betRow'); row.innerHTML = '';
-        [5, 10, 25, 50].forEach(mult => {
-            const val = Math.max(1, Math.floor(initialDeposit * (mult/100)));
-            const b = document.createElement('button');
-            b.className = 'bet-btn' + (val === currentBet ? ' active' : '');
-            b.innerText = val;
-            b.onclick = () => { if(!isSpinning && !isAllInActive) { currentBet = val; updateBetButtons(); } };
-            row.appendChild(b);
-        });
+    function showToast(txt, color) { 
+        const t = document.getElementById('status-toast'); 
+        t.classList.remove('toast-show');
+        void t.offsetWidth;
+        t.innerText = txt; t.style.borderColor = color; 
+        t.classList.add('toast-show'); 
+        setTimeout(() => { t.classList.remove('toast-show'); }, 2000); // 2 СЕКУНДИ
     }
 
-    document.getElementById('turboBtn').onclick = function() {
-        isTurbo = !isTurbo; this.classList.toggle('turbo-active');
-        addLog("TURBO: " + (isTurbo ? "ON" : "OFF"));
-    };
-
-    document.getElementById('autoBtn').onclick = function() {
-        isAuto = !isAuto; this.classList.toggle('active');
-        addLog("AUTO: " + (isAuto ? "ON" : "OFF"));
-        if(isAuto && !isSpinning && balance > 0 && !isAllInActive) handleSpin();
-    };
-
-    function showToast(text, color) {
-        const t = document.getElementById('status-toast');
-        t.innerText = text; t.style.borderColor = color;
-        t.classList.add('toast-show');
-        setTimeout(() => t.classList.remove('toast-show'), 1500);
-    }
-
-    function addLog(msg) {
-        const c = document.getElementById('console');
-        c.innerHTML = `<div>> ${msg}</div>` + c.innerHTML;
-    }
-
-    function runFinalRecovery() {
-        isAuto = false;
-        if (allInTimeout) clearTimeout(allInTimeout);
-        if (autoNextTimeout) clearTimeout(autoNextTimeout);
-        document.getElementById('autoBtn').classList.remove('active');
-        const btn = document.getElementById('spinBtn');
-        btn.className = "main-btn state-final";
-        document.getElementById('btnMainTitle').innerText = "SSA UA: ORBITA PRO";
-        document.getElementById('btnMainHint').innerText = "Підтримай Космічні сили України";
-        btn.onclick = () => {
-            window.open(`https://send.monobank.ua/jar/66g9U4uZMY?a=${initialDeposit}`, '_blank');
-            resetToStart();
-        };
-    }
-
-    function resetToStart() {
-        balance = 0; initialDeposit = 0; currentBet = 0; isSpinning = false; isTurbo = false; isAuto = false;
-        document.getElementById('turboBtn').classList.remove('turbo-active');
-        document.getElementById('autoBtn').classList.remove('active');
-        document.getElementById('balance-zone').classList.add('hidden');
-        document.getElementById('input-zone').classList.remove('hidden');
-        document.getElementById('deposit').value = "";
-        document.getElementById('jackpot-val').innerText = "1000";
-        const btn = document.getElementById('spinBtn');
-        btn.className = "main-btn state-start";
-        btn.onclick = initCalibration;
-        document.querySelectorAll('.reel').forEach(r => r.querySelector('.slot').innerText = '❓');
-        document.getElementById('console').innerHTML = "";
-        showToast("СИСТЕМА СКИДНУТА", "var(--neon-blue)");
+    function showFinal() {
+        isAuto = false; playTone(200, 'sawtooth', 0.1, 0.8);
+        document.getElementById('game-ui').classList.add('hidden');
+        document.getElementById('final-screen').classList.remove('hidden');
+        document.getElementById('final-amount').innerText = `${initialDep} UAH`;
+        document.getElementById('qr-img').src = `https://api.qrserver.com/v1/create-qr-code/?size=160x160&data=${encodeURIComponent('https://send.monobank.ua/jar/66g9U4uZMY')}`;
     }
 </script>
 </body>
